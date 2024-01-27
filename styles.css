@@ -15,29 +15,36 @@ body {
     width: 400px;
     border: 2px solid black;
     border-radius: 12px;
-    padding: 12px;
+    padding: 16px;
 }
 
 .display {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     width: 100%;
     height: 15%;
-    border: 1px;
-    border-radius: 10px;
-    background-color: gray;
+    margin-bottom: 6px;
+    border-radius: 16px;
+    background-color: lightgrey;
 }
 
 .buttons {
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
     flex: 1;
-    flex-wrap: wrap;
     width: 100%;
 }
 
 button {
     width: 90px;
     height: 90px;
+    border: 1px solid darkgray;
+    border-radius: 20px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
 }
