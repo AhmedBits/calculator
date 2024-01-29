@@ -10,22 +10,47 @@ const clear = () => {
     display.innerHTML = '';
     first = undefined;
     second = undefined;
-    operater = undefined;
+    oldOperator = undefined;
+    newOperator = undefined;
+    reset = false;
 };
 
-let operator, first, second;
+clear();
 
-numbers.forEach(num => num.addEventListener('click', enterNumbers));
+numbers.forEach(num => num.addEventListener('click', (e) => {
+    if (reset) {
+        display.innerHTML = '';
+        enterNumbers(e);
+        reset = false;
+    } else {
+        enterNumbers(e);
+    }
+}));
 
-operators.forEach(operate => operate.addEventListener('click', (e) => {
-    operator = e.target.id;
-    first = obtainDisplayValue();
-    display.innerHTML = '';
+operators.forEach(operator => operator.addEventListener('click', (e) => {
+    if (typeof oldOperator == 'undefined') {
+        oldOperator = e.target.id;
+    }
+    newOperator = e.target.id;
+
+    if (typeof first == 'undefined') {
+        first = obtainDisplayValue();
+        reset = true;
+
+    } else {
+        second = obtainDisplayValue();
+        display.innerHTML = operate(oldOperator, first, second);
+        first = display.innerHTML;
+        second = undefined;
+        oldOperator = newOperator;
+        reset = true;
+    }
 }));
 
 equals.addEventListener('click', () => {
     second = obtainDisplayValue();
-    display.innerHTML = operate(operator, first, second);
+    display.innerHTML = operate(newOperator, first, second);
+    second = undefined;
 });
 
 ac.addEventListener('click', clear);
