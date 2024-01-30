@@ -72,20 +72,18 @@ function handleNumberClick(e) {
 }
 
 function handleOperatorClick(e) {
-    if (typeof oldOperator == 'undefined') {
-        oldOperator = e.target.id;
-    }
     newOperator = e.target.id;
 
     if (pressedOperator) {
+        oldOperator = newOperator;
         return;
     }
 
-    if (typeof first == 'undefined' || pressedEquals) {
+    if (typeof oldOperator == 'undefined' || pressedEquals) {
         first = obtainDisplayValue();
+        oldOperator = e.target.id;
         resetDisplay = true;
         pressedEquals = false;
-        oldOperator = e.target.id;
     } else {
         second = obtainDisplayValue();
         display.innerHTML = operate(oldOperator, first, second);
