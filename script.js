@@ -14,6 +14,7 @@ const clearAll = () => {
     newOperator = undefined;
     resetDisplay = false;
     pressedEquals = false;
+    pressedOperator = false;
 };
 
 clearAll();
@@ -29,14 +30,18 @@ numbers.forEach(num => num.addEventListener('click', (e) => {
     } else {
         enterNumbers(e);
     }
+    pressedOperator = false;
 }));
 
 operators.forEach(operator => operator.addEventListener('click', (e) => {
-    // If this is a new compute, the oldOperator is the clicked event
     if (typeof oldOperator == 'undefined') {
         oldOperator = e.target.id;
     }
     newOperator = e.target.id;
+
+    if (pressedOperator) {
+        return;
+    }
 
     // If this is a new compute, store the current display value 
     // as the first variable in a future operation
@@ -56,9 +61,13 @@ operators.forEach(operator => operator.addEventListener('click', (e) => {
         oldOperator = newOperator;
         resetDisplay = true;
     }
+    pressedOperator = true;
 }));
 
 equals.addEventListener('click', () => {
+    if (pressedEquals || pressedOperator || typeof first == 'undefined') {
+        return;
+    }
     second = obtainDisplayValue();
     display.innerHTML = operate(newOperator, first, second);
     second = undefined;
@@ -72,7 +81,6 @@ const subtract = (a, b) => a - b;
 const multiply = (a, b) => a * b;
 const divide = (a, b) => { 
     if (b == 0) {
-        console.log('ERROR');
         return NaN;
     }
     return a / b;
@@ -80,7 +88,6 @@ const divide = (a, b) => {
 const power = (a, b) => a ** b;
 const modulo = (a, b) => {
     if (b == 0) {
-        console.log('ERROR');
         return NaN;
     }
     return a % b;
@@ -101,7 +108,6 @@ function operate(operator, first, second) {
         case '%':
             return modulo(first, second);
         default:
-            console.log('ERROR');
             return NaN;
     }
 }
