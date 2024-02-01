@@ -15,7 +15,7 @@ const clearAll = () => {
   resetDisplay = false;
   pressedEquals = false;
   pressedOperator = false;
-  decimalClicked = false;
+  pressedDecimal = false;
 };
 const rounded = (num) => num.toFixed(3);
 
@@ -70,10 +70,10 @@ function handleNumberClick(e) {
     clearAll();
   }
   if (e.target.id === '.') {
-    if (decimalClicked === true) {
+    if (pressedDecimal === true) {
       return;
     }
-    decimalClicked = true;
+    pressedDecimal = true;
   }
   enterNumbers(e);
   pressedOperator = false;
@@ -92,7 +92,7 @@ function handleOperatorClick(e) {
     oldOperator = e.target.id;
     resetDisplay = true;
     pressedEquals = false;
-    decimalClicked = false;
+    pressedDecimal = false;
   } else {
     second = obtainDisplayValue();
     display.innerHTML = operate(oldOperator, first, second);
@@ -100,7 +100,7 @@ function handleOperatorClick(e) {
     oldOperator = newOperator;
     second = undefined;
     resetDisplay = true;
-    decimalClicked = false;
+    pressedDecimal = false;
   }
   pressedOperator = true;
 }
@@ -113,5 +113,5 @@ function handleEqualClick() {
   display.innerHTML = operate(newOperator, first, second);
   second = undefined;
   pressedEquals = true;
-  decimalClicked = false;
+  pressedDecimal = false;
 }
