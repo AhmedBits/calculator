@@ -15,7 +15,9 @@ const clearAll = () => {
   resetDisplay = false;
   pressedEquals = false;
   pressedOperator = false;
+  decimalClicked = false;
 };
+const rounded = (num) => num.toFixed(3);
 
 clearAll();
 
@@ -44,17 +46,17 @@ const modulo = (a, b) => {
 function operate(operator, first, second) {
   switch (operator) {
     case "+":
-      return add(first, second);
+      return rounded(add(first, second)).replace(/\.?0+$/, '');;
     case "-":
-      return subtract(first, second);
+      return rounded(subtract(first, second)).replace(/\.?0+$/, '');;
     case "*":
-      return multiply(first, second);
+      return rounded(multiply(first, second)).replace(/\.?0+$/, '');;
     case "/":
-      return divide(first, second);
+      return rounded(divide(first, second)).replace(/\.?0+$/, '');;
     case "^":
-      return power(first, second);
+      return rounded(power(first, second)).replace(/\.?0+$/, '');;
     case "%":
-      return modulo(first, second);
+      return rounded(modulo(first, second)).replace(/\.?0+$/, '');;
     default:
       return NaN;
   }
@@ -66,6 +68,12 @@ function handleNumberClick(e) {
     resetDisplay = false;
   } else if (pressedEquals) {
     clearAll();
+  }
+  if (e.target.id === '.') {
+    if (decimalClicked === true) {
+      return;
+    }
+    decimalClicked = true;
   }
   enterNumbers(e);
   pressedOperator = false;
@@ -84,6 +92,7 @@ function handleOperatorClick(e) {
     oldOperator = e.target.id;
     resetDisplay = true;
     pressedEquals = false;
+    decimalClicked = false;
   } else {
     second = obtainDisplayValue();
     display.innerHTML = operate(oldOperator, first, second);
@@ -91,6 +100,7 @@ function handleOperatorClick(e) {
     oldOperator = newOperator;
     second = undefined;
     resetDisplay = true;
+    decimalClicked = false;
   }
   pressedOperator = true;
 }
@@ -103,4 +113,5 @@ function handleEqualClick() {
   display.innerHTML = operate(newOperator, first, second);
   second = undefined;
   pressedEquals = true;
+  decimalClicked = false;
 }
