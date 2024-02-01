@@ -31,14 +31,14 @@ const subtract = (a, b) => a - b;
 const multiply = (a, b) => a * b;
 const divide = (a, b) => {
   if (b == 0) {
-    return undefined;
+    return NaN;
   }
   return a / b;
 };
 const power = (a, b) => a ** b;
 const modulo = (a, b) => {
   if (b == 0) {
-    return undefined;
+    return NaN;
   }
   return a % b;
 };
