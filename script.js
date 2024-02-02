@@ -4,8 +4,9 @@ const operators = document.querySelectorAll(".operator");
 const equals = document.querySelector("#equals");
 const ac = document.querySelector("#ac");
 
-const enterNumbers = (e) => (display.innerHTML += e.target.id);
+const enterNumbers = (e) => (display.innerHTML += e);
 const obtainDisplayValue = () => display.innerHTML;
+const rounded = (num) => num.toFixed(3);
 const clearAll = () => {
   display.innerHTML = "";
   first = undefined;
@@ -17,10 +18,10 @@ const clearAll = () => {
   pressedOperator = false;
   pressedDecimal = false;
 };
-const rounded = (num) => num.toFixed(3);
 
 clearAll();
 
+document.addEventListener("keydown", handleKeyClick);
 numbers.forEach((num) => num.addEventListener("click", handleNumberClick));
 operators.forEach((operator) => operator.addEventListener("click", handleOperatorClick));
 equals.addEventListener("click", handleEqualClick);
@@ -63,24 +64,27 @@ function operate(operator, first, second) {
 }
 
 function handleNumberClick(e) {
+  let clickedNumber = e.target ? e.target.id : e;
+  
   if (resetDisplay) {
     display.innerHTML = "";
     resetDisplay = false;
   } else if (pressedEquals) {
     clearAll();
   }
-  if (e.target.id === '.') {
+  if (clickedNumber === '.') {
     if (pressedDecimal === true) {
       return;
     }
     pressedDecimal = true;
   }
-  enterNumbers(e);
+  enterNumbers(clickedNumber);
   pressedOperator = false;
 }
 
 function handleOperatorClick(e) {
-  newOperator = e.target.id;
+  let clickedOperator = e.target ? e.target.id : e;
+  newOperator = clickedOperator;
 
   if (pressedOperator) {
     oldOperator = newOperator;
@@ -89,7 +93,7 @@ function handleOperatorClick(e) {
 
   if (typeof oldOperator == "undefined" || pressedEquals) {
     first = obtainDisplayValue();
-    oldOperator = e.target.id;
+    oldOperator = clickedOperator;
     resetDisplay = true;
     pressedEquals = false;
     pressedDecimal = false;
@@ -114,4 +118,24 @@ function handleEqualClick() {
   second = undefined;
   pressedEquals = true;
   pressedDecimal = false;
+}
+
+function handleKeyClick(e) {
+  let key = e.key;
+
+  if (!isNaN(key) || key === '.') {
+    handleNumberClick(key);
+  } else if (key === 'Enter') {
+    e.preventDefault();
+    handleEqualClick();
+  } else if (key === 'Backspace') {
+    let string = display.innerHTML;
+    display.innerHTML = string.slice(0, -1);
+  } else {
+    operators.forEach(operator => {
+      if (key === operator.id) {
+        handleOperatorClick(key);
+      }
+    });
+  }
 }
