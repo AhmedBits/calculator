@@ -7,6 +7,7 @@ const ac = document.querySelector("#ac");
 const enterNumbers = (e) => (display.innerHTML += e);
 const obtainDisplayValue = () => display.innerHTML;
 const rounded = (num) => num.toFixed(3);
+const clearPushedOperators = () => operators.forEach((btn) => btn.classList.remove("highlight"));
 const clearAll = () => {
   display.innerHTML = "";
   first = undefined;
@@ -17,6 +18,7 @@ const clearAll = () => {
   pressedEquals = false;
   pressedOperator = false;
   pressedDecimal = false;
+  clearPushedOperators();
 };
 
 clearAll();
@@ -47,17 +49,17 @@ const modulo = (a, b) => {
 function operate(operator, first, second) {
   switch (operator) {
     case "+":
-      return rounded(add(first, second)).replace(/\.?0+$/, '');;
+      return rounded(add(first, second)).replace(/\.?0+$/, "");
     case "-":
-      return rounded(subtract(first, second)).replace(/\.?0+$/, '');;
+      return rounded(subtract(first, second)).replace(/\.?0+$/, "");
     case "*":
-      return rounded(multiply(first, second)).replace(/\.?0+$/, '');;
+      return rounded(multiply(first, second)).replace(/\.?0+$/, "");
     case "/":
-      return rounded(divide(first, second)).replace(/\.?0+$/, '');;
+      return rounded(divide(first, second)).replace(/\.?0+$/, "");
     case "^":
-      return rounded(power(first, second)).replace(/\.?0+$/, '');;
+      return rounded(power(first, second)).replace(/\.?0+$/, "");
     case "%":
-      return rounded(modulo(first, second)).replace(/\.?0+$/, '');;
+      return rounded(modulo(first, second)).replace(/\.?0+$/, "");
     default:
       return NaN;
   }
@@ -65,14 +67,14 @@ function operate(operator, first, second) {
 
 function handleNumberClick(e) {
   let clickedNumber = e.target ? e.target.id : e;
-  
+
   if (resetDisplay) {
     display.innerHTML = "";
     resetDisplay = false;
   } else if (pressedEquals) {
     clearAll();
   }
-  if (clickedNumber === '.') {
+  if (clickedNumber === ".") {
     if (pressedDecimal === true) {
       return;
     }
@@ -87,6 +89,7 @@ function handleOperatorClick(e) {
   newOperator = clickedOperator;
 
   if (pressedOperator) {
+    pushOperator(newOperator, oldOperator);
     oldOperator = newOperator;
     return;
   }
@@ -97,10 +100,12 @@ function handleOperatorClick(e) {
     resetDisplay = true;
     pressedEquals = false;
     pressedDecimal = false;
+    pushOperator(newOperator, oldOperator);
   } else {
     second = obtainDisplayValue();
     display.innerHTML = operate(oldOperator, first, second);
     first = display.innerHTML;
+    pushOperator(newOperator, oldOperator);
     oldOperator = newOperator;
     second = undefined;
     resetDisplay = true;
@@ -118,24 +123,37 @@ function handleEqualClick() {
   second = undefined;
   pressedEquals = true;
   pressedDecimal = false;
+  clearPushedOperators();
 }
 
 function handleKeyClick(e) {
   let key = e.key;
 
-  if (!isNaN(key) || key === '.') {
+  if (!isNaN(key) || key === ".") {
     handleNumberClick(key);
-  } else if (key === 'Enter') {
+  } else if (key === "Enter") {
     e.preventDefault();
     handleEqualClick();
-  } else if (key === 'Backspace') {
+  } else if (key === "Backspace") {
     let string = display.innerHTML;
     display.innerHTML = string.slice(0, -1);
   } else {
-    operators.forEach(operator => {
+    operators.forEach((operator) => {
       if (key === operator.id) {
         handleOperatorClick(key);
       }
     });
   }
+}
+
+function pushOperator(newOperator, oldOperator) {
+  let a = document.getElementById(newOperator);
+  let b = document.getElementById(oldOperator);
+
+  if (a === b) {
+    a.classList.add("highlight");
+    return;
+  }
+  a.classList.add("highlight");
+  b.classList.remove("highlight");
 }
