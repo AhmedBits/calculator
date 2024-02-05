@@ -1,12 +1,17 @@
 body {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif, 'Montserrat';
     background-color: #87cefa;
     margin: 0;
     min-height: 100vh;
+}
+
+.calc-container {
+    display: flex;
+    flex: 1;
     align-items: center;
-    justify-content: center;
-    font-family: sans-serif, 'Montserrat';
 }
 
 #calculator {
@@ -72,4 +77,13 @@ button {
 
 .special {
     background-color: #ff8f00;
+}
+
+.footer {
+    margin-bottom: 16px;
+}
+
+a {
+    text-decoration: none;
+    color: #3f3f3f;
 }
